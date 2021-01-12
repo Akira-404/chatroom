@@ -14,12 +14,12 @@ func main()  {
 	var loop=true
 	
 	for loop{
-		fmt.Println("==========welcome  to chatroom==========")
-		fmt.Println("\t\t\t\n 1 login")
-		fmt.Println("\t\t\t\n 2 register")
-		fmt.Println("\t\t\t\n 3 quit")
-		fmt.Println("\t\t\t\nselect 1-3")
-
+		fmt.Println(" ==welcome  to chatroom==")
+		fmt.Println("\t 1 登录")
+		fmt.Println("\t 2 注册")
+		fmt.Println("\t 3 退出")
+		fmt.Println("\t 选择1-3")
+		
 		fmt.Scanf("%d\n",&key)
 		switch key {
 			case 1:
@@ -28,6 +28,7 @@ func main()  {
 				fmt.Scanf("%d\n",&userId)
 				fmt.Println("enter your password")
 				fmt.Scanf("%s\n",&userPwd)
+
 				up:=&process.UserProcess{}
 				up.Login(userId,userPwd)
 				// loop=false

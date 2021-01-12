@@ -90,6 +90,7 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 	err=model.MyUserDao.Register(&registerMes.User)
 	if err!=nil{
 		if err==model.ERROR_USER_EXISTS{
+			fmt.Println("用户已存在")
 			registerResMes.Code=505
 			registerResMes.Error=model.ERROR_USER_EXISTS.Error()
 		}else {
@@ -98,6 +99,7 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 		}
 	}else
 	{
+		fmt.Println("新用户")
 		registerResMes.Code=200
 	}
 
@@ -124,10 +126,11 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 
 	//server send the registerresmes to client
 	err=tf.WritePkg(data)
+	fmt.Println("注册响应信息")
 	return
 }
 
-	func (this *UserProcess)ServerProcessLogin(mes *message.Message)(err error)  {
+func (this *UserProcess)ServerProcessLogin(mes *message.Message)(err error)  {
 	
 	//get the data from mes.data and 反序列化
 	var loginMes message.LoginMes
@@ -149,13 +152,13 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 
 		if err==model.ERROR_USER_NOTEXISTS{
 			loginResMes.Code=500
-			loginResMes.Error="not user"
+			loginResMes.Error="用户不存在"
 		}else if err==model.ERROR_USER_PWD{
 			loginResMes.Code=403
-			loginResMes.Error="passworld failed"
+			loginResMes.Error="密码错误"
 		}else{
 			loginResMes.Code=505
-			loginResMes.Error="server is broken...."
+			loginResMes.Error="服务器错误...."
 		}
 
 	}else{
@@ -170,13 +173,8 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 			loginResMes.UsersId=append(loginResMes.UsersId,id)
 		}
 
-		fmt.Println(user,"login success")
+		fmt.Println(user,"登录成功")
 	}
-
-	//default id:100 pwd:123456
-	// if loginMes.UserId==100&&loginMes.UserPwd=="123456"{
-	// }else{
-	// }
 
 	//序列化消息体内容
 	data,err:=json.Marshal(loginResMes)
@@ -198,5 +196,6 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 		Conn:this.Conn,
 	}
 	err=tf.WritePkg(data)
+	fmt.Println("发送登录响应信息")
 	return
 }

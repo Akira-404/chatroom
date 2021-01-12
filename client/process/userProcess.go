@@ -78,7 +78,7 @@ func (this *UserProcess)Register(userId int,userPwd string,userName string) (err
 		return
 	}
 	if registerResMes.Code==200{
-		fmt.Println("register success please sign in again")
+		fmt.Println("注册成功，请重新登录")
 		os.Exit(0)
 	}else{
 		fmt.Println(registerResMes.Error)
@@ -89,11 +89,7 @@ func (this *UserProcess)Register(userId int,userPwd string,userName string) (err
 }
 	
 func (this *UserProcess)Login(userId int,userPwd string) (err error) {
-
-	//定协议
-	// fmt.Printf("userId=%d,userPwd=%s\n",userId,userPwd)	
-	// return nil
-
+	
 	//connnect server
 	//在网络network上连接地址address，并返回一个Conn接口 err
 	conn,err:=net.Dial("tcp","0.0.0.0:8889")
@@ -115,6 +111,7 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 	loginMes.UserId=userId
 	loginMes.UserPwd=userPwd
 
+	//封装信息------------------------
 	//登录信息结构体序列化
 	data,err:=json.Marshal(loginMes)
 	if err!=nil{
@@ -136,6 +133,8 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 	var buf [4]byte
 	binary.BigEndian.PutUint32(buf[0:4],pkgLen)
 
+	//封装信息------------------------
+	
 	//send len of data
 	//func (c *IPConn) Write(b []byte) (int, error)
 	n,err:=conn.Write(buf[:4])
@@ -144,8 +143,8 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 		return
 	}
 	
-	fmt.Println("client len of message send success")
-	fmt.Printf("len=%d,data=%s\n",len(data),string(data))
+	fmt.Println("信息长度发送完毕")
+	fmt.Printf("长度=%d,数据内容=%s\n",len(data),string(data))
 
 	//send data
 	_,err=conn.Write(data)
@@ -153,11 +152,6 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 		fmt.Println("conn.Write err",err)
 		return
 	}
-	
-	//sleep 20s
-	// time.Sleep(10*time.Second)
-	// fmt.Println("sleep 10s")
-
 	//Processing messages returned by the server
 	tf:=&utils.Transfer{
 		Conn:conn,
@@ -171,6 +165,10 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 	//将mse的data部分反系列化成LoginResMes
 	var loginResMes message.LoginResMes
 	err=json.Unmarshal([]byte(mes.Data),&loginResMes)
+	if err!=nil{
+		fmt.Println("json.Unmarshal err=",err)
+		return
+	}
 	
 	//查看回馈消息code
 	if loginResMes.Code==200{
@@ -179,14 +177,14 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 		CurUser.UserId=userId
 		CurUser.UserStatus=message.UserOnline
 
-		fmt.Println("login success")
+		fmt.Println("登录成功")
 		//show online users list
-		fmt.Println("online users list")
+		fmt.Println("在线人员列表:")
 		for _,v:=range loginResMes.UsersId{
 			if v==userId{
 				continue
 			}
-			fmt.Println("user id: \t",v)
+			fmt.Println("用户id \t",v)
 
 			user:=&message.User{
 				UserId:v,

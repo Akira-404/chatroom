@@ -86,6 +86,7 @@ func (this *UserDao)Register(user *message.User)(err error)  {
 	}
 
 	//写入数据库
+	fmt.Println("新用户写入数据库")
 	_,err=conn.Do("hset","users",user.UserId,string(data))
 	if err!=nil{
 		fmt.Println("conn.Do err=",err)
