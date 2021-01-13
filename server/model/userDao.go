@@ -14,7 +14,7 @@ var(
 
 //user data access object
 //userDao 有一切关于操作user数据库的方法
-//需要提供数据库连接
+//需要提供数据库连接池
 
 type UserDao struct{
 	pool *redis.Pool
@@ -29,12 +29,15 @@ func NewUserDao(pool *redis.Pool)(userDao *UserDao)  {
 
 	return
 }
-
+ 
+//提供数据库连接，查询id
 func (this *UserDao)getUserById(conn redis.Conn,id int)(user *User,err error)  {
 	
+	// Do(commandName string, args ...interface{}) (reply interface{}, err error)
 	res,err:=redis.String(conn.Do("hget","users",id))
 	if err!=nil{
 		if err==redis.ErrNil{
+			//用户不存在
 			err=ERROR_USER_NOTEXISTS
 		}
 		return
@@ -47,11 +50,13 @@ func (this *UserDao)getUserById(conn redis.Conn,id int)(user *User,err error)  {
 		fmt.Println("json.Unmarshal err=",err)	
 	}
 
-	return//什么错误都没有-->用户存在
+	//什么错误都没有-->用户存在
+	return
 }
 
 func (this *UserDao)Login(userId int,userPwd string)(user *User,err error)  {
 	
+	//从连接池获取一根连接
 	conn:=this.pool.Get()
 	
 	defer conn.Close()

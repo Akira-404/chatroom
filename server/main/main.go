@@ -37,8 +37,9 @@ func main()  {
 
 	//初始化redis连接池
 	initPool("0.0.0.0:6379",16,0,300*time.Second)
-	//初始化user 数据库操作
 	
+	//初始化user 数据库操作
+	//pool->redis.go	
 	initUserDao(pool)
 	
 	//返回在一个本地网络地址laddr上监听的Listener。网络类型参数net必须是面向流的网络：
