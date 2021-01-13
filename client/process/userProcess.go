@@ -163,6 +163,8 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 		fmt.Println("登录成功")
 		//show online users list
 		fmt.Println("在线人员列表:")
+
+		//loginResMes包含在线用户列表
 		for _,v:=range loginResMes.UsersId{
 			if v==userId{
 				continue

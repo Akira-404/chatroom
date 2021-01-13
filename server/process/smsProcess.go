@@ -25,7 +25,8 @@ func (this *SmsProcess)SendGroupMes(mes *message.Message)  {
 	if err!=nil{
 		fmt.Println("json.Marshal err=",err)
 	}	
-	
+
+	//在在线用户发送数据
 	for id,up:=range userMgr.onlineUsers{
 		//过滤自己，不给自己发信息
 		if id==smsMes.UserId{

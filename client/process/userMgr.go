@@ -9,11 +9,11 @@ import(
 var onlineUsers map[int]*message.User=make(map[int]*message.User, 10)
 var CurUser model.CurUser
 
-
+//显示在线列表
 func outputOnlineUser()  {
-	fmt.Println("current online user list:")
+	fmt.Println("当前在线用户:")
 	for id,_:=range onlineUsers{
-		fmt.Printf("user id:%d\n",id)
+		fmt.Printf("ID:%d\n",id)
 	}	
 }
 
