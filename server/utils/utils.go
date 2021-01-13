@@ -19,7 +19,7 @@ type Transfer struct{
 //读数据，反序列化
 func (this *Transfer)ReadPkg()(mes message.Message,err error)  {
 
-	fmt.Println("receive data of client to send....")
+	fmt.Println("读取数据....")
 	// buf:=make([]byte, 8096)
 
 	//func (c *IPConn) Read(b []byte) (int, error)
@@ -54,9 +54,9 @@ func (this *Transfer)ReadPkg()(mes message.Message,err error)  {
 func (this *Transfer)WritePkg(data[]byte)(err error)  {
 
 	//send len of data
+	fmt.Println("发送数据")
 	var pkgLen uint32
 	pkgLen=uint32(len(data))
-	// var buf [4]byte
 	binary.BigEndian.PutUint32(this.Buf[:4],pkgLen)
 
 	//写入数据总长
@@ -74,3 +74,5 @@ func (this *Transfer)WritePkg(data[]byte)(err error)  {
 	}
 	return
 }
+
+

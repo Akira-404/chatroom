@@ -7,7 +7,7 @@ import(
 	"encoding/json"
 	"chatroom/common/message"
 	"chatroom/client/utils"
-	"encoding/binary"
+	// "encoding/binary"
 )
 
 type UserProcess struct{
@@ -127,35 +127,41 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 		fmt.Println("json marshal err=",err)
 		return
 	}
-
-	var pkgLen uint32
-	pkgLen=uint32(len(data))
-	var buf [4]byte
-	binary.BigEndian.PutUint32(buf[0:4],pkgLen)
-
-	//封装信息------------------------
 	
-	//send len of data
-	//func (c *IPConn) Write(b []byte) (int, error)
-	n,err:=conn.Write(buf[:4])
-	if err!=nil||n!=4{
-		fmt.Println("conn.Write err",err)
-		return
-	}
-	
-	fmt.Println("信息长度发送完毕")
-	fmt.Printf("长度=%d,数据内容=%s\n",len(data),string(data))
-
-	//send data
-	_,err=conn.Write(data)
-	if err!=nil{
-		fmt.Println("conn.Write err",err)
-		return
-	}
-	//Processing messages returned by the server
 	tf:=&utils.Transfer{
 		Conn:conn,
-	}	
+	}
+	
+	err=tf.WritePkg(data)
+	if err!=nil{
+		fmt.Println("writepkg err=",err)
+		return
+	}
+
+	// var pkgLen uint32
+	// pkgLen=uint32(len(data))
+
+	// var buf [4]byte
+	// binary.BigEndian.PutUint32(buf[0:4],pkgLen)
+
+	// //封装信息------------------------
+	// n,err:=conn.Write(buf[:4])
+	// if err!=nil||n!=4{
+	// 	fmt.Println("conn.Write err",err)
+	// 	return
+	// }
+	
+	// fmt.Println("信息长度发送完毕")
+	// fmt.Printf("长度=%d,数据内容=%s\n",len(data),string(data))
+
+	// //send data
+	// _,err=conn.Write(data)
+	// if err!=nil{
+	// 	fmt.Println("conn.Write err",err)
+	// 	return
+	// }
+
+	//Processing messages returned by the server
 	mes,err=tf.ReadPkg()	
 	if err!=nil{
 		fmt.Println("readPkg err",err)
@@ -197,6 +203,7 @@ func (this *UserProcess)Login(userId int,userPwd string) (err error) {
 		for{
 			ShowMenu()
 		}
+
 	}else if loginResMes.Code==500{
 		fmt.Println(loginResMes.Error)
 	}

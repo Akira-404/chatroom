@@ -89,6 +89,7 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 	//检验用户是否已经存在
 	err=model.MyUserDao.Register(&registerMes.User)
 	if err!=nil{
+
 		if err==model.ERROR_USER_EXISTS{
 			fmt.Println("用户已存在")
 			registerResMes.Code=505
@@ -97,8 +98,9 @@ func (this *UserProcess)ServerProcessRegister(mes *message.Message)(err error)  
 			registerResMes.Code=506
 			registerResMes.Error="somewhere havs broken..."
 		}
-	}else
-	{
+
+	}else{
+
 		fmt.Println("新用户")
 		registerResMes.Code=200
 	}

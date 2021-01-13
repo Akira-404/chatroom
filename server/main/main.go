@@ -10,6 +10,7 @@ import(
 	_"encoding/json"
 	_"chatroom/common/message"
 	_"encoding/binary"
+	"redigo/redis"
 )
 
 //process communicate with client
@@ -27,14 +28,18 @@ func process(conn net.Conn)  {
 	}
 }
 
-func initUserDao()  {
+//init user data access object
+func initUserDao(pool *redis.Pool)  {
 	model.MyUserDao=model.NewUserDao(pool)
 }
 
 func main()  {
 
+	//初始化redis连接池
 	initPool("0.0.0.0:6379",16,0,300*time.Second)
-	initUserDao()
+	//初始化user 数据库操作
+	
+	initUserDao(pool)
 	
 	//返回在一个本地网络地址laddr上监听的Listener。网络类型参数net必须是面向流的网络：
 	fmt.Println("服务器监听端口:8889")

@@ -12,10 +12,15 @@ var(
 	MyUserDao *UserDao
 )
 
+//user data access object
+//userDao 有一切关于操作user数据库的方法
+//需要提供数据库连接
+
 type UserDao struct{
 	pool *redis.Pool
 }
 
+//构造函数：初始化数据库连接池
 func NewUserDao(pool *redis.Pool)(userDao *UserDao)  {
 
 	userDao=&UserDao{

@@ -19,13 +19,9 @@ type Transfer struct{
 //读数据，反序列化
 func (this *Transfer)ReadPkg()(mes message.Message,err error)  {
 
-	fmt.Println("receive data of client to send....")
-	// buf:=make([]byte, 8096)
-
-	//func (c *IPConn) Read(b []byte) (int, error)
+	fmt.Println("读取数据....")
 	_,err=this.Conn.Read(this.Buf[:4])
 	if err!=nil{
-		// err=errors.New("read pkg header error")	
 		return
 	}
 	
@@ -36,7 +32,6 @@ func (this *Transfer)ReadPkg()(mes message.Message,err error)  {
 	//read the data
 	n,err:=this.Conn.Read(this.Buf[:pkgLen])
 	if n!=int(pkgLen)||err!=nil{
-		// err=errors.New("read pkg body error")	
 		return
 	}
 
@@ -47,12 +42,14 @@ func (this *Transfer)ReadPkg()(mes message.Message,err error)  {
 		fmt.Println("json.Unmarshal err=",err)
 		return
 	}
+
 	return
 }
 
 //写数据，序列化
 func (this *Transfer)WritePkg(data[]byte)(err error)  {
 
+	fmt.Println("发送数据...")
 	//send len of data
 	var pkgLen uint32
 	pkgLen=uint32(len(data))
@@ -72,5 +69,6 @@ func (this *Transfer)WritePkg(data[]byte)(err error)  {
 		fmt.Println("conn.Write err=",err)
 		return
 	}
+
 	return
 }
