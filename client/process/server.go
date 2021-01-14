@@ -98,7 +98,7 @@ func ShowMenu()  {
 
 				var personalMes message.PersonalMes
 				json.Unmarshal([]byte(mes.Data),&personalMes)
-				fmt.Printf("[%d]发来=>%s",personalMes.SUserId,personalMes.Content)
+				fmt.Printf("[%d]发来=>%s\n",personalMes.SUserId,personalMes.Content)
 
 			default:fmt.Println("服务器反馈->没有找到这种类型")
 			
