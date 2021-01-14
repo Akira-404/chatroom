@@ -11,12 +11,12 @@ var CurUser model.CurUser
 
 //显示在线列表
 func outputOnlineUser()  {
-	fmt.Println("当前在线用户:")
 	for id,_:=range onlineUsers{
-		fmt.Printf("ID:%d\n",id)
+		fmt.Printf("ID:%d在线\n",id)
 	}	
 }
 
+//更新用户状态
 func updataUserStatus(notifyUserStatusMes *message.NotifyUserStatusMes)  {
 		
 	user,ok:=onlineUsers[notifyUserStatusMes.UserId]
