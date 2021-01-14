@@ -8,6 +8,8 @@ const(
 	RegisterResMesType="RegisterResMes"
 	NotifyUserStatusMesType="NotifyUserStatusMes"
 	SmsMesType="SmsMes"
+	PersonalMesType="PersonalMesType"
+	PersonalResMesType="PersonalResMesType"
 )
 
 const(
@@ -57,4 +59,17 @@ type NotifyUserStatusMes struct{
 type SmsMes struct{
 	Content string`json:"content"`
 	User
+}
+
+type PersonalMes struct{
+	
+	SUserId int`json:"suserid"`
+	Content string `json:"content"`
+	RUserId int `json:"ruserid"`
+}
+
+type PersonalResMes struct{
+	
+	Code int `json:"code"`//200:success,201:failed
+	Error error `json:"error"`
 }

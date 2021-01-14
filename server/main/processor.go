@@ -34,6 +34,13 @@ func (this *Processor)serverProcessMES(mes *message.Message) (err error) {
 			fmt.Println("属于群发类型")
 			smsProcess:=&process2.SmsProcess{}
 			smsProcess.SendGroupMes(mes)
+		case message.PersonalMesType://群发信息
+			fmt.Println("属于私发类型")
+			personalProcess:=&process2.PersonalMesProcess{
+				Conn:this.Conn,
+			}
+			personalProcess.SendMesTo(mes)
+
 		default:
 			fmt.Println("type is not exited")	
 	}	
